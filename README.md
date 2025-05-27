@@ -64,8 +64,3 @@ const mcqQuestions = [
 2. Change styling by editing the Tailwind classes or CSS variables
 
 3. Add more sections by duplicating the tab pattern
-
-
----
-
-**Note**: For actual implementation, replace the placeholder image and customize content as needed.
