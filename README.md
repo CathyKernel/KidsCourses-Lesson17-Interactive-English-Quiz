@@ -1,102 +1,72 @@
-# Lesson A1-17: Prepositions and God's Laws
+# Interactive English Quiz - Lesson A1-17
 
 
-## Lesson Overview
-**Theme:** Understanding prepositions through biblical teachings  
-**Bible Passage:** Exodus 3:9-12, 5:1-11, 12:21-42, 20:1-17  
-**Key Vocabulary:** in, on, behind, above, between, across, laws, Lord, holy, land  
+An interactive web-based quiz teaching English prepositions and Bible concepts through engaging activities.
+
+## Features
+
+- **Three Interactive Sections**:
+  - Multiple Choice Vocabulary Quiz
+  - Drag-and-Drop Preposition Practice
+  - Bible Terms Matching Game
+  
+- **Engaging Visual Elements**:
+  - Confetti celebration animations
+  - Floating draggable elements
+  - Progress tracking with visual bar
+  - Tabbed interface for easy navigation
+
+- **Educational Content**:
+  - Teaches English prepositions (in, on, between, etc.)
+  - Covers Bible stories and concepts
+  - Includes Ten Commandments matching
+
+## How to Use
+
+1. Clone or download the repository
+2. Open `index.html` in any modern web browser
+3. Complete the three sections in order:
+   - Multiple choice questions
+   - Drag-and-drop preposition practice
+   - Bible terms matching game
+4. View your score upon completion
+
+
+## Technical Details
+
+- **Built With**:
+  - HTML5
+  - CSS3 (with Tailwind CSS)
+  - Vanilla JavaScript
+  - Animate.css for animations
+
+- **Dependencies**:
+  - [Tailwind CSS](https://tailwindcss.com/)
+  - [Animate.css](https://animate.style/)
+
+- **Browser Support**:
+  - Chrome (latest)
+  - Firefox (latest)
+  - Safari (latest)
+  - Edge (latest)
+
+## Customization
+
+To modify the content:
+
+1. Edit questions in the JavaScript array:
+```javascript
+const mcqQuestions = [
+    { id: 'mcq1', question: 'The bread is ___ the basket.', correct: 'in' },
+    // More questions...
+];
+```
+
+2. Change styling by editing the Tailwind classes or CSS variables
+
+3. Add more sections by duplicating the tab pattern
+
 
 ---
 
-## Interactive Activities
-
-### 1. Multiple Choice Quiz
-Complete each sentence with the correct preposition or vocabulary word:
-
-1. The bread is ___ the basket.  
-   - [ ] on  
-   - [x] in  
-   - [ ] behind  
-
-2. The tree is ___ the woman.  
-   - [ ] in  
-   - [x] behind  
-   - [ ] above  
-
-3. God gave the ___ to Moses on the mountain.  
-   - [x] laws  
-   - [ ] land  
-   - [ ] love  
-
----
-
-### 2. Drag-and-Drop Prepositions
-Match prepositions to complete the sentences:
-
-**Word Bank:**  
-`in` | `behind` | `above` | `between` | `across`
-
-- The sun is [above] the land.  
-- The phone is [between] the stove and sink.  
-- They walked [across] the desert.  
-
----
-
-### 3. Bible Terms Matching
-Connect each term with its correct definition:
-
-| Term      | Definition                          |
-|-----------|-------------------------------------|
-| laws      | Rules given by God                  |
-| holy      | Pure, set apart for God            |
-| mountain  | Where Moses received the commandments |
-
----
-
-## Bible Story: Moses and the Ten Commandments
-
-**Key Events Timeline:**
-1. God's people were slaves in Egypt
-2. God chose Moses to lead them out
-3. Moses performed miracles in Egypt
-4. God gave the Ten Commandments on Mount Sinai
-5. The people reached the Promised Land
-
-**Discussion Questions:**
-1. Why did God give us the Ten Commandments?
-2. Which commandment do you think is most important today?
-3. How can we apply these laws in modern life?
-
----
-
-## Application Exercises
-
-### Room Description
-Write 6 sentences about items in your room using prepositions:
-
-1. The Bible is _beside_ my bed.
-2. The lamp is _above_ my desk.
-3. [Your sentence...]
-
-### Ethical Dilemmas
-**Scenario:** Your friend asks you to lie for them.  
-**Which commandment does this break?**  
-> Commandment 9: "Do not tell lies."
-
----
-
-## Memory Verse
-
-> "Be holy in everything you do, just as God is holy."  
-> **1 Peter 1:15 (ERV)**
-
----
-
-## Homework Assignments
-
-1. Read Ruth 1:1-4:21 in your language
-2. Complete the preposition exercises
-3. Memorize 1 Peter 1:15
-4. Write about one commandment that's challenging to follow
-
-[⬆ Back to Top](#lesson-a1-17-prepositions-and-gods-laws)
+**Note**: For actual implementation, replace the placeholder image and customize content as needed.
