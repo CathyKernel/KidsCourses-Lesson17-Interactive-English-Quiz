@@ -5,168 +5,280 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interactive English Quiz - Lesson A1-17</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <style>
-        .draggable { cursor: move; transition: transform 0.2s; }
-        .draggable:hover { transform: scale(1.05); }
-        .drop-zone { min-height: 50px; border: 2px dashed #ccc; border-radius: 8px; transition: background-color 0.3s; }
-        .correct { background-color: #d4edda; border-color: #28a745; }
-        .incorrect { background-color: #f8d7da; border-color: #dc3545; }
-        .animate-correct { animation: pulse 0.5s; }
-        .animate-incorrect { animation: shake 0.5s; }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
-        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
-        .progress-bar { transition: width 0.3s ease-in-out; }
+        .draggable { 
+            cursor: move; 
+            transition: all 0.3s ease; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .draggable:hover { 
+            transform: translateY(-3px) scale(1.05); 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .drop-zone { 
+            min-height: 50px; 
+            border: 2px dashed rgba(99, 102, 241, 0.5); 
+            border-radius: 8px; 
+            transition: all 0.3s ease;
+            background-color: rgba(249, 250, 251, 0.5);
+        }
+        .drop-zone:hover {
+            border-color: rgba(99, 102, 241, 0.8);
+            background-color: rgba(249, 250, 251, 0.8);
+        }
+        .correct { 
+            background-color: #d4edda; 
+            border-color: #28a745;
+            animation: pulse 0.5s;
+        }
+        .incorrect { 
+            background-color: #f8d7da; 
+            border-color: #dc3545;
+            animation: shake 0.5s;
+        }
+        @keyframes pulse { 
+            0% { transform: scale(1); } 
+            50% { transform: scale(1.05); } 
+            100% { transform: scale(1); } 
+        }
+        @keyframes shake { 
+            0%, 100% { transform: translateX(0); } 
+            25% { transform: translateX(-5px); } 
+            75% { transform: translateX(5px); } 
+        }
+        .progress-bar { 
+            transition: width 0.5s cubic-bezier(0.65, 0, 0.35, 1); 
+        }
+        .section-title {
+            position: relative;
+            padding-left: 1rem;
+        }
+        .section-title::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background: linear-gradient(to bottom, #6366f1, #8b5cf6);
+            border-radius: 4px;
+        }
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background-color: #f472b6;
+            opacity: 0;
+            z-index: 1000;
+            animation: confetti-fall 3s ease-in-out forwards;
+        }
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+        @keyframes floating {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
     </style>
 </head>
-<body class="bg-gradient-to-br from-blue-100 to-indigo-100 flex flex-col items-center justify-center min-h-screen p-4 font-sans">
-    <div class="bg-white rounded-2xl shadow-xl p-8 w-full max-w-3xl">
-        <h1 class="text-3xl font-bold text-center text-indigo-700 mb-6">Lesson A1-17: Prepositions and Vocabulary Quiz</h1>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-50 flex flex-col items-center justify-center min-h-screen p-4 font-sans">
+    <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-4xl relative overflow-hidden">
+        <!-- Decorative elements -->
+        <div class="absolute -top-10 -right-10 w-32 h-32 bg-indigo-100 rounded-full opacity-20"></div>
+        <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-purple-100 rounded-full opacity-20"></div>
         
-        <!-- Progress Bar -->
-        <div class="mb-6">
-            <div class="w-full bg-gray-200 rounded-full h-2.5">
-                <div id="progress-bar" class="bg-indigo-600 h-2.5 rounded-full" style="width: 0%"></div>
+        <div class="relative z-10">
+            <h1 class="text-4xl font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 mb-2 animate__animated animate__fadeIn">Lesson A1-17</h1>
+            <h2 class="text-2xl font-semibold text-center text-gray-700 mb-6">Prepositions and God's Laws</h2>
+            
+            <!-- Progress Bar -->
+            <div class="mb-8">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-sm font-medium text-indigo-700">Your Progress</span>
+                    <span id="progress-text" class="text-sm font-medium text-gray-600">0/16 completed</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-3">
+                    <div id="progress-bar" class="bg-gradient-to-r from-indigo-500 to-purple-500 h-3 rounded-full" style="width: 0%"></div>
+                </div>
             </div>
-            <p class="text-sm text-gray-600 mt-2 text-center">Progress: <span id="progress-text">0/16</span></p>
-        </div>
 
-        <!-- Section 1: Multiple Choice Vocabulary Quiz -->
-        <div class="mb-8">
-            <h2 class="text-2xl font-semibold text-indigo-600 mb-4">Part 1: Multiple Choice - Prepositions & Vocabulary</h2>
-            <p class="mb-4 text-gray-700">Choose the correct answer to complete each sentence.</p>
-            <div id="mcq-container" class="space-y-6">
-                <div id="mcq1">
-                    <p class="font-medium">1. The bread is ___ the basket.</p>
-                    <select class="border p-2 rounded-lg w-full focus:ring-2 focus:ring-indigo-500">
-                        <option value="">Select</option>
-                        <option value="in">in</option>
-                        <option value="on">on</option>
-                        <option value="behind">behind</option>
-                    </select>
-                    <p id="mcq1-feedback" class="mt-2 text-sm"></p>
-                </div>
-                <div id="mcq2">
-                    <p class="font-medium">2. The tree is ___ the woman.</p>
-                    <select class="border p-2 rounded-lg w-full focus:ring-2 focus:ring-indigo-500">
-                        <option value="">Select</option>
-                        <option value="in">in</option>
-                        <option value="behind">behind</option>
-                        <option value="above">above</option>
-                    </select>
-                    <p id="mcq2-feedback" class="mt-2 text-sm"></p>
-                </div>
-                <div id="mcq3">
-                    <p class="font-medium">3. The phone is ___ the stove and the sink.</p>
-                    <select class="border p-2 rounded-lg w-full focus:ring-2 focus:ring-indigo-500">
-                        <option value="">Select</option>
-                        <option value="between">between</option>
-                        <option value="under">under</option>
-                        <option value="on">on</option>
-                    </select>
-                    <p id="mcq3-feedback" class="mt-2 text-sm"></p>
-                </div>
-                <div id="mcq4">
-                    <p class="font-medium">4. Adam walks ___ the street.</p>
-                    <select class="border p-2 rounded-lg w-full focus:ring-2 focus:ring-indigo-500">
-                        <option value="">Select</option>
-                        <option value="across">across</option>
-                        <option value="above">above</option>
-                        <option value="in">in</option>
-                    </select>
-                    <p id="mcq4-feedback" class="mt-2 text-sm"></p>
-                </div>
-                <div id="mcq5">
-                    <p class="font-medium">5. God gave the ___ to Moses on the mountain.</p>
-                    <select class="border p-2 rounded-lg w-full focus:ring-2 focus:ring-indigo-500">
-                        <option value="">Select</option>
-                        <option value="laws">laws</option>
-                        <option value="land">land</option>
-                        <option value="love">love</option>
-                    </select>
-                    <p id="mcq5-feedback" class="mt-2 text-sm"></p>
-                </div>
+            <!-- Navigation Tabs -->
+            <div class="flex mb-8 border-b border-gray-200">
+                <button class="tab-btn active px-4 py-2 font-medium text-indigo-600 border-b-2 border-indigo-600" data-tab="mcq">Vocabulary</button>
+                <button class="tab-btn px-4 py-2 font-medium text-gray-500 hover:text-indigo-500" data-tab="drag-drop">Prepositions</button>
+                <button class="tab-btn px-4 py-2 font-medium text-gray-500 hover:text-indigo-500" data-tab="matching">Bible Terms</button>
             </div>
-        </div>
 
-        <!-- Section 2: Drag-and-Drop Preposition Activity -->
-        <div class="mb-8">
-            <h2 class="text-2xl font-semibold text-indigo-600 mb-4">Part 2: Drag and Drop Prepositions</h2>
-            <p class="mb-4 text-gray-700">Drag the prepositions to the correct sentences.</p>
-            <div class="flex flex-wrap gap-3 mb-4">
-                <div class="draggable bg-indigo-200 text-indigo-800 p-3 rounded-lg" draggable="true" data-answer="in">in</div>
-                <div class="draggable bg-indigo-200 text-indigo-800 p-3 rounded-lg" draggable="true" data-answer="behind">behind</div>
-                <div class="draggable bg-indigo-200 text-indigo-800 p-3 rounded-lg" draggable="true" data-answer="above">above</div>
-                <div class="draggable bg-indigo-200 text-indigo-800 p-3 rounded-lg" draggable="true" data-answer="between">between</div>
-                <div class="draggable bg-indigo-200 text-indigo-800 p-3 rounded-lg" draggable="true" data-answer="across">across</div>
+            <!-- Section 1: Multiple Choice Vocabulary Quiz -->
+            <div id="mcq" class="tab-content active animate__animated animate__fadeIn">
+                <div class="mb-8">
+                    <h3 class="section-title text-xl font-semibold text-gray-800 mb-4">Part 1: Complete the Sentences</h3>
+                    <p class="mb-6 text-gray-600">Choose the correct word to complete each sentence about God's laws and prepositions.</p>
+                    <div id="mcq-container" class="space-y-6">
+                        <div id="mcq1" class="bg-gray-50 p-4 rounded-lg transition-all hover:bg-gray-100">
+                            <p class="font-medium text-gray-800">1. The bread is ___ the basket.</p>
+                            <select class="mt-2 border border-gray-300 p-2 rounded-lg w-full focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                                <option value="">Select an option</option>
+                                <option value="in">in</option>
+                                <option value="on">on</option>
+                                <option value="behind">behind</option>
+                            </select>
+                            <p id="mcq1-feedback" class="mt-2 text-sm"></p>
+                        </div>
+                        <div id="mcq2" class="bg-gray-50 p-4 rounded-lg transition-all hover:bg-gray-100">
+                            <p class="font-medium text-gray-800">2. The tree is ___ the woman.</p>
+                            <select class="mt-2 border border-gray-300 p-2 rounded-lg w-full focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                                <option value="">Select an option</option>
+                                <option value="in">in</option>
+                                <option value="behind">behind</option>
+                                <option value="above">above</option>
+                            </select>
+                            <p id="mcq2-feedback" class="mt-2 text-sm"></p>
+                        </div>
+                        <div id="mcq3" class="bg-gray-50 p-4 rounded-lg transition-all hover:bg-gray-100">
+                            <p class="font-medium text-gray-800">3. The phone is ___ the stove and the sink.</p>
+                            <select class="mt-2 border border-gray-300 p-2 rounded-lg w-full focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                                <option value="">Select an option</option>
+                                <option value="between">between</option>
+                                <option value="under">under</option>
+                                <option value="on">on</option>
+                            </select>
+                            <p id="mcq3-feedback" class="mt-2 text-sm"></p>
+                        </div>
+                        <div id="mcq4" class="bg-gray-50 p-4 rounded-lg transition-all hover:bg-gray-100">
+                            <p class="font-medium text-gray-800">4. Adam walks ___ the street.</p>
+                            <select class="mt-2 border border-gray-300 p-2 rounded-lg w-full focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                                <option value="">Select an option</option>
+                                <option value="across">across</option>
+                                <option value="above">above</option>
+                                <option value="in">in</option>
+                            </select>
+                            <p id="mcq4-feedback" class="mt-2 text-sm"></p>
+                        </div>
+                        <div id="mcq5" class="bg-gray-50 p-4 rounded-lg transition-all hover:bg-gray-100">
+                            <p class="font-medium text-gray-800">5. God gave the ___ to Moses on the mountain.</p>
+                            <select class="mt-2 border border-gray-300 p-2 rounded-lg w-full focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                                <option value="">Select an option</option>
+                                <option value="laws">laws</option>
+                                <option value="land">land</option>
+                                <option value="love">love</option>
+                            </select>
+                            <p id="mcq5-feedback" class="mt-2 text-sm"></p>
+                        </div>
+                    </div>
+                </div>
+                <button class="next-btn bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition float-right">Next →</button>
             </div>
-            <div class="space-y-4">
-                <div class="flex items-center gap-4">
-                    <p class="flex-1 font-medium">The sun is ___ the land.</p>
-                    <div class="drop-zone w-28 p-3" data-correct="above"></div>
-                </div>
-                <div class="flex items-center gap-4">
-                    <p class="flex-1 font-medium">The pen is ___ the book.</p>
-                    <div class="drop-zone w-28 p-3" data-correct="in"></div>
-                </div>
-                <div class="flex items-center gap-4">
-                    <p class="flex-1 font-medium">The teacher lives ___ the church.</p>
-                    <div class="drop-zone w-28 p-3" data-correct="behind"></div>
-                </div>
-                <div class="flex items-center gap-4">
-                    <p class="flex-1 font-medium">The phone is ___ the stove and the sink.</p>
-                    <div class="drop-zone w-28 p-3" data-correct="between"></div>
-                </div>
-                <div class="flex items-center gap-4">
-                    <p class="flex-1 font-medium">The boys walk ___ the street to school.</p>
-                    <div class="drop-zone w-28 p-3" data-correct="across"></div>
-                </div>
-            </div>
-        </div>
 
-        <!-- Section 3: Vocabulary Matching Game -->
-        <div class="mb-8">
-            <h2 class="text-2xl font-semibold text-indigo-600 mb-4">Part 3: Vocabulary Matching Game</h2>
-            <p class="mb-4 text-gray-700">Match each word to its correct definition or example by dragging it to the right box.</p>
-            <div class="flex flex-wrap gap-3 mb-4">
-                <div class="draggable bg-purple-200 text-purple-800 p-3 rounded-lg" draggable="true" data-answer="laws">laws</div>
-                <div class="draggable bg-purple-200 text-purple-800 p-3 rounded-lg" draggable="true" data-answer="love">love</div>
-                <div class="draggable bg-purple-200 text-purple-800 p-3 rounded-lg" draggable="true" data-answer="mountain">mountain</div>
-                <div class="draggable bg-purple-200 text-purple-800 p-3 rounded-lg" draggable="true" data-answer="Lord">Lord</div>
-                <div class="draggable bg-purple-200 text-purple-800 p-3 rounded-lg" draggable="true" data-answer="land">land</div>
-                <div class="draggable bg-purple-200 text-purple-800 p-3 rounded-lg" draggable="true" data-answer="holy">holy</div>
+            <!-- Section 2: Drag-and-Drop Preposition Activity -->
+            <div id="drag-drop" class="tab-content hidden animate__animated animate__fadeIn">
+                <div class="mb-8">
+                    <h3 class="section-title text-xl font-semibold text-gray-800 mb-4">Part 2: Preposition Practice</h3>
+                    <p class="mb-6 text-gray-600">Drag the prepositions to complete the sentences correctly.</p>
+                    
+                    <div class="flex flex-wrap gap-3 mb-6 justify-center">
+                        <div class="draggable bg-indigo-100 text-indigo-800 p-3 rounded-lg font-medium shadow-sm floating" draggable="true" data-answer="in">in</div>
+                        <div class="draggable bg-indigo-100 text-indigo-800 p-3 rounded-lg font-medium shadow-sm floating" draggable="true" data-answer="behind">behind</div>
+                        <div class="draggable bg-indigo-100 text-indigo-800 p-3 rounded-lg font-medium shadow-sm floating" style="animation-delay: 0.2s" draggable="true" data-answer="above">above</div>
+                        <div class="draggable bg-indigo-100 text-indigo-800 p-3 rounded-lg font-medium shadow-sm floating" style="animation-delay: 0.4s" draggable="true" data-answer="between">between</div>
+                        <div class="draggable bg-indigo-100 text-indigo-800 p-3 rounded-lg font-medium shadow-sm floating" style="animation-delay: 0.6s" draggable="true" data-answer="across">across</div>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div class="flex flex-col sm:flex-row items-center gap-4 bg-gray-50 p-4 rounded-lg">
+                            <p class="flex-1 font-medium text-gray-800">The sun is ___ the land.</p>
+                            <div class="drop-zone w-full sm:w-32 p-3 flex items-center justify-center" data-correct="above"></div>
+                        </div>
+                        <div class="flex flex-col sm:flex-row items-center gap-4 bg-gray-50 p-4 rounded-lg">
+                            <p class="flex-1 font-medium text-gray-800">The pen is ___ the book.</p>
+                            <div class="drop-zone w-full sm:w-32 p-3 flex items-center justify-center" data-correct="in"></div>
+                        </div>
+                        <div class="flex flex-col sm:flex-row items-center gap-4 bg-gray-50 p-4 rounded-lg">
+                            <p class="flex-1 font-medium text-gray-800">The teacher lives ___ the church.</p>
+                            <div class="drop-zone w-full sm:w-32 p-3 flex items-center justify-center" data-correct="behind"></div>
+                        </div>
+                        <div class="flex flex-col sm:flex-row items-center gap-4 bg-gray-50 p-4 rounded-lg">
+                            <p class="flex-1 font-medium text-gray-800">The phone is ___ the stove and the sink.</p>
+                            <div class="drop-zone w-full sm:w-32 p-3 flex items-center justify-center" data-correct="between"></div>
+                        </div>
+                        <div class="flex flex-col sm:flex-row items-center gap-4 bg-gray-50 p-4 rounded-lg">
+                            <p class="flex-1 font-medium text-gray-800">The boys walk ___ the street to school.</p>
+                            <div class="drop-zone w-full sm:w-32 p-3 flex items-center justify-center" data-correct="across"></div>
+                        </div>
+                    </div>
+                </div>
+                <button class="prev-btn bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300 transition mr-2">← Previous</button>
+                <button class="next-btn bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition float-right">Next →</button>
             </div>
-            <div class="space-y-4">
-                <div class="flex items-center gap-4">
-                    <p class="flex-1 font-medium">Rules given by God to ___</p>
-                    <div class="drop-zone w-28 p-3" data-correct="laws"></div>
-                </div>
-                <div class="flex items-center gap-4">
-                    <p class="flex-1 font-medium">The Lord Jesus ___ us</p>
-                    <div class="drop-zone w-28 p-3" data-correct="love"></div>
-                </div>
-                <div class="flex items-center gap-4">
-                    <p class="flex-1 font-medium">Moses led the people to a ___</p>
-                    <div class="drop-zone w-28 p-3" data-correct="mountain"></div>
-                </div>
-                <div class="flex items-center gap-4">
-                    <p class="flex-1 font-medium">___, do not have gods other than me</p>
-                    <div class="drop-zone w-28 p-3" data-correct="Lord"></div>
-                </div>
-                <div class="flex items-center gap-4">
-                    <p class="flex-1 font-medium">God brought his people back to the ___</p>
-                    <div class="drop-zone w-28 p-3" data-correct="land"></div>
-                </div>
-                <div class="flex items-center gap-4">
-                    <p class="flex-1 font-medium">He helps us have ___ lives</p>
-                    <div class="drop-zone w-28 p-3" data-correct="holy"></div>
-                </div>
-            </div>
-        </div>
 
-        <!-- Score Display -->
-        <div class="text-center">
-            <p class="font-semibold text-lg text-indigo-700">Score: <span id="score">0</span>/16</p>
-            <button class="bg-indigo-600 text-white px-6 py-3 rounded-lg mt-4 hover:bg-indigo-700 transition" onclick="resetQuiz()">Reset Quiz</button>
+            <!-- Section 3: Vocabulary Matching Game -->
+            <div id="matching" class="tab-content hidden animate__animated animate__fadeIn">
+                <div class="mb-8">
+                    <h3 class="section-title text-xl font-semibold text-gray-800 mb-4">Part 3: Bible Terms Matching</h3>
+                    <p class="mb-6 text-gray-600">Match each Bible term to its correct definition or example.</p>
+                    
+                    <div class="flex flex-wrap gap-3 mb-6 justify-center">
+                        <div class="draggable bg-purple-100 text-purple-800 p-3 rounded-lg font-medium shadow-sm floating" draggable="true" data-answer="laws">laws</div>
+                        <div class="draggable bg-purple-100 text-purple-800 p-3 rounded-lg font-medium shadow-sm floating" style="animation-delay: 0.2s" draggable="true" data-answer="love">love</div>
+                        <div class="draggable bg-purple-100 text-purple-800 p-3 rounded-lg font-medium shadow-sm floating" style="animation-delay: 0.4s" draggable="true" data-answer="mountain">mountain</div>
+                        <div class="draggable bg-purple-100 text-purple-800 p-3 rounded-lg font-medium shadow-sm floating" style="animation-delay: 0.6s" draggable="true" data-answer="Lord">Lord</div>
+                        <div class="draggable bg-purple-100 text-purple-800 p-3 rounded-lg font-medium shadow-sm floating" style="animation-delay: 0.8s" draggable="true" data-answer="land">land</div>
+                        <div class="draggable bg-purple-100 text-purple-800 p-3 rounded-lg font-medium shadow-sm floating" style="animation-delay: 1s" draggable="true" data-answer="holy">holy</div>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div class="flex flex-col sm:flex-row items-center gap-4 bg-gray-50 p-4 rounded-lg">
+                            <p class="flex-1 font-medium text-gray-800">Rules given by God to ___</p>
+                            <div class="drop-zone w-full sm:w-32 p-3 flex items-center justify-center" data-correct="laws"></div>
+                        </div>
+                        <div class="flex flex-col sm:flex-row items-center gap-4 bg-gray-50 p-4 rounded-lg">
+                            <p class="flex-1 font-medium text-gray-800">The Lord Jesus ___ us</p>
+                            <div class="drop-zone w-full sm:w-32 p-3 flex items-center justify-center" data-correct="love"></div>
+                        </div>
+                        <div class="flex flex-col sm:flex-row items-center gap-4 bg-gray-50 p-4 rounded-lg">
+                            <p class="flex-1 font-medium text-gray-800">Moses led the people to a ___</p>
+                            <div class="drop-zone w-full sm:w-32 p-3 flex items-center justify-center" data-correct="mountain"></div>
+                        </div>
+                        <div class="flex flex-col sm:flex-row items-center gap-4 bg-gray-50 p-4 rounded-lg">
+                            <p class="flex-1 font-medium text-gray-800">___, do not have gods other than me</p>
+                            <div class="drop-zone w-full sm:w-32 p-3 flex items-center justify-center" data-correct="Lord"></div>
+                        </div>
+                        <div class="flex flex-col sm:flex-row items-center gap-4 bg-gray-50 p-4 rounded-lg">
+                            <p class="flex-1 font-medium text-gray-800">God brought his people back to the ___</p>
+                            <div class="drop-zone w-full sm:w-32 p-3 flex items-center justify-center" data-correct="land"></div>
+                        </div>
+                        <div class="flex flex-col sm:flex-row items-center gap-4 bg-gray-50 p-4 rounded-lg">
+                            <p class="flex-1 font-medium text-gray-800">He helps us have ___ lives</p>
+                            <div class="drop-zone w-full sm:w-32 p-3 flex items-center justify-center" data-correct="holy"></div>
+                        </div>
+                    </div>
+                </div>
+                <button class="prev-btn bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300 transition">← Previous</button>
+            </div>
+
+            <!-- Score Display and Completion Message -->
+            <div id="completion-message" class="hidden text-center py-8">
+                <div class="mb-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20 text-green-500 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2">Quiz Completed!</h3>
+                    <p class="text-gray-600 mb-4">You scored <span id="final-score" class="font-bold text-indigo-600">0</span> out of 16</p>
+                    <p class="text-gray-500 italic">"Be holy in everything you do, just as God is holy." - 1 Peter 1:15</p>
+                </div>
+                <button class="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition" onclick="resetQuiz()">Try Again</button>
+            </div>
         </div>
     </div>
 
@@ -182,92 +294,213 @@
             { id: 'mcq5', question: 'God gave the ___ to Moses on the mountain.', correct: 'laws' }
         ];
 
+        // Tab navigation
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active', 'text-indigo-600', 'border-indigo-600'));
+                btn.classList.add('active', 'text-indigo-600', 'border-indigo-600');
+                
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.add('hidden'));
+                document.getElementById(btn.dataset.tab).classList.remove('hidden');
+            });
+        });
+
+        // Next/previous buttons
+        document.querySelectorAll('.next-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const currentTab = btn.closest('.tab-content').id;
+                let nextTab = '';
+                
+                if (currentTab === 'mcq') nextTab = 'drag-drop';
+                else if (currentTab === 'drag-drop') nextTab = 'matching';
+                else if (currentTab === 'matching') return;
+                
+                document.querySelector(`.tab-btn[data-tab="${currentTab}"]`).classList.remove('active', 'text-indigo-600', 'border-indigo-600');
+                document.querySelector(`.tab-btn[data-tab="${nextTab}"]`).classList.add('active', 'text-indigo-600', 'border-indigo-600');
+                
+                document.getElementById(currentTab).classList.add('hidden');
+                document.getElementById(nextTab).classList.remove('hidden');
+            });
+        });
+
+        document.querySelectorAll('.prev-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const currentTab = btn.closest('.tab-content').id;
+                let prevTab = '';
+                
+                if (currentTab === 'drag-drop') prevTab = 'mcq';
+                else if (currentTab === 'matching') prevTab = 'drag-drop';
+                else if (currentTab === 'mcq') return;
+                
+                document.querySelector(`.tab-btn[data-tab="${currentTab}"]`).classList.remove('active', 'text-indigo-600', 'border-indigo-600');
+                document.querySelector(`.tab-btn[data-tab="${prevTab}"]`).classList.add('active', 'text-indigo-600', 'border-indigo-600');
+                
+                document.getElementById(currentTab).classList.add('hidden');
+                document.getElementById(prevTab).classList.remove('hidden');
+            });
+        });
+
         // Handle multiple-choice answers
         document.querySelectorAll('#mcq-container select').forEach(select => {
             select.addEventListener('change', (e) => {
                 const id = e.target.closest('div').id;
                 const question = mcqQuestions.find(q => q.id === id);
                 const feedback = document.getElementById(`${id}-feedback`);
+                
                 if (e.target.value === question.correct) {
-                    feedback.textContent = 'Correct!';
-                    feedback.classList.remove('text-red-600');
-                    feedback.classList.add('text-green-600', 'animate-correct');
+                    feedback.textContent = '✓ Correct!';
+                    feedback.className = 'mt-2 text-sm text-green-600 animate__animated animate__fadeIn';
                     if (!answeredQuestions.has(id)) {
                         score++;
                         answeredQuestions.add(id);
                         updateProgress();
                     }
                 } else {
-                    feedback.textContent = `Incorrect. The correct answer is "${question.correct}".`;
-                    feedback.classList.remove('text-green-600');
-                    feedback.classList.add('text-red-600', 'animate-incorrect');
+                    feedback.textContent = `✗ Incorrect. The correct answer is "${question.correct}".`;
+                    feedback.className = 'mt-2 text-sm text-red-600 animate__animated animate__headShake';
                 }
             });
         });
 
-        // Drag and Drop Logic for Parts 2 and 3
+        // Drag and Drop Logic
         const draggables = document.querySelectorAll('.draggable');
         const dropZones = document.querySelectorAll('.drop-zone');
 
         draggables.forEach(draggable => {
             draggable.addEventListener('dragstart', (e) => {
                 e.dataTransfer.setData('text', e.target.dataset.answer);
+                e.target.classList.add('opacity-50');
+            });
+
+            draggable.addEventListener('dragend', (e) => {
+                e.target.classList.remove('opacity-50');
             });
         });
 
         dropZones.forEach(zone => {
             zone.addEventListener('dragover', (e) => {
                 e.preventDefault();
+                zone.classList.add('bg-indigo-50', 'border-indigo-300');
+            });
+
+            zone.addEventListener('dragleave', () => {
+                zone.classList.remove('bg-indigo-50', 'border-indigo-300');
             });
 
             zone.addEventListener('drop', (e) => {
                 e.preventDefault();
+                zone.classList.remove('bg-indigo-50', 'border-indigo-300');
+                
                 const answer = e.dataTransfer.getData('text');
                 const correctAnswer = zone.dataset.correct;
                 const zoneId = zone.id || `drop-${Math.random().toString(36).substr(2, 9)}`;
                 zone.id = zoneId;
+                
                 if (answer === correctAnswer) {
-                    zone.textContent = answer;
-                    zone.classList.add('correct', 'animate-correct');
+                    zone.innerHTML = `<span class="font-medium">${answer}</span>`;
+                    zone.classList.add('correct');
                     zone.classList.remove('incorrect');
+                    
                     if (!answeredQuestions.has(zoneId)) {
                         score++;
                         answeredQuestions.add(zoneId);
                         updateProgress();
+                        createConfetti(e.clientX, e.clientY);
                     }
                 } else {
-                    zone.textContent = `Incorrect: ${answer}`;
-                    zone.classList.add('incorrect', 'animate-incorrect');
+                    zone.innerHTML = `<span class="text-red-600">✗ ${answer}</span>`;
+                    zone.classList.add('incorrect');
                     zone.classList.remove('correct');
                 }
             });
         });
 
         function updateProgress() {
-            document.getElementById('score').textContent = score;
             const totalQuestions = 16; // 5 MCQ + 5 Part 2 + 6 Part 3
             const progressPercent = (answeredQuestions.size / totalQuestions) * 100;
+            
             document.getElementById('progress-bar').style.width = `${progressPercent}%`;
-            document.getElementById('progress-text').textContent = `${answeredQuestions.size}/${totalQuestions}`;
+            document.getElementById('progress-text').textContent = `${answeredQuestions.size}/${totalQuestions} completed`;
+            
+            // Update score display
+            document.getElementById('score').textContent = score;
+            
+            // Show completion message if all questions answered
+            if (answeredQuestions.size === totalQuestions) {
+                setTimeout(() => {
+                    document.querySelectorAll('.tab-content').forEach(content => content.classList.add('hidden'));
+                    document.getElementById('completion-message').classList.remove('hidden');
+                    document.getElementById('final-score').textContent = score;
+                    celebrateCompletion();
+                }, 1000);
+            }
+        }
+
+        function celebrateCompletion() {
+            // Create confetti effect
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = `${Math.random() * 100}vw`;
+                    confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 75%)`;
+                    confetti.style.width = `${Math.random() * 10 + 5}px`;
+                    confetti.style.height = `${Math.random() * 10 + 5}px`;
+                    confetti.style.animationDuration = `${Math.random() * 2 + 2}s`;
+                    document.body.appendChild(confetti);
+                    
+                    // Remove confetti after animation
+                    setTimeout(() => {
+                        confetti.remove();
+                    }, 3000);
+                }, i * 100);
+            }
+        }
+
+        function createConfetti(x, y) {
+            for (let i = 0; i < 5; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = `${x}px`;
+                confetti.style.top = `${y}px`;
+                confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 75%)`;
+                document.body.appendChild(confetti);
+                
+                // Remove confetti after animation
+                setTimeout(() => {
+                    confetti.remove();
+                }, 3000);
+            }
         }
 
         function resetQuiz() {
             score = 0;
             answeredQuestions.clear();
-            document.getElementById('score').textContent = score;
+            
+            // Reset progress bar
             document.getElementById('progress-bar').style.width = '0%';
-            document.getElementById('progress-text').textContent = '0/16';
-            document.querySelectorAll('.drop-zone').forEach(zone => {
-                zone.textContent = '';
-                zone.classList.remove('correct', 'incorrect', 'animate-correct', 'animate-incorrect');
-            });
+            document.getElementById('progress-text').textContent = '0/16 completed';
+            
+            // Reset multiple choice questions
             document.querySelectorAll('#mcq-container select').forEach(select => {
                 select.value = '';
             });
             document.querySelectorAll('[id*="mcq"][id*="feedback"]').forEach(fb => {
                 fb.textContent = '';
-                fb.classList.remove('text-green-600', 'text-red-600', 'animate-correct', 'animate-incorrect');
             });
+            
+            // Reset drop zones
+            document.querySelectorAll('.drop-zone').forEach(zone => {
+                zone.innerHTML = '';
+                zone.classList.remove('correct', 'incorrect');
+            });
+            
+            // Hide completion message and show first tab
+            document.getElementById('completion-message').classList.add('hidden');
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active', 'text-indigo-600', 'border-indigo-600'));
+            document.querySelector('.tab-btn[data-tab="mcq"]').classList.add('active', 'text-indigo-600', 'border-indigo-600');
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.add('hidden'));
+            document.getElementById('mcq').classList.remove('hidden');
         }
     </script>
 </body>
