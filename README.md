@@ -85,9 +85,6 @@ The quiz targets the first half of Lesson A1-17, focusing on:
 
 ## Development Notes
 
-- **Artifact ID**: `79809c1f-6f59-4675-a50d-22548afc99ad`
-- **Version ID**: `7d706187-be7e-44b4-9200-e902ab84cde9`
-- **Date**: May 27, 2025
 - **Optimizations**:
   - Refactored JavaScript for maintainability.
   - Used Tailwind CSS for rapid, consistent styling.
