@@ -1,6 +1,5 @@
 # Lesson A1-17: Prepositions and God's Laws
 
-![Banner](https://via.placeholder.com/800x200.png?text=Prepositions+and+God's+Laws)
 
 ## Lesson Overview
 **Theme:** Understanding prepositions through biblical teachings  
