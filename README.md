@@ -19,7 +19,6 @@ An interactive web-based quiz teaching English prepositions and Bible concepts t
 - **Educational Content**:
   - Teaches English prepositions (in, on, between, etc.)
   - Covers Bible stories and concepts
-  - Includes Ten Commandments matching
 
 ## How to Use
 
